@@ -155,14 +155,14 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --manifest-path=druid-shell/Cargo.toml --locked --all-targets --features=x11 -- -D warnings
+          args: --manifest-path=druid-shell/Cargo.toml --locked --all-targets --features=x11
         if: contains(matrix.os, 'ubuntu')
 
       - name: cargo clippy druid (X11)
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --manifest-path=druid/Cargo.toml --locked --all-targets --features=x11 -- -D warnings
+          args: --manifest-path=druid/Cargo.toml --locked --all-targets --features=x11
         if: contains(matrix.os, 'ubuntu')
 
       - name: cargo test druid-shell (X11)
