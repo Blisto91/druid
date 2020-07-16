@@ -92,8 +92,9 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
           key: cargo-deps-${{ hashFiles('Cargo.lock') }}
-          
-      - name: Cache target
+        
+      - id: target-cache
+        name: Restore target cache
         uses: actions/cache@v2
         with:
           path: target/
@@ -179,5 +180,7 @@ jobs:
           args: --manifest-path=druid/Cargo.toml --locked --features=x11
         if: contains(matrix.os, 'ubuntu')
 
-      - name: clean target
+      # Remove druid build files from target before caching
+      - name: clean druid artifacts
         run: cargo clean -p druid-shell -p druid -p druid-derive
+        if: steps.target-cache.outputs.cache != 'true'
