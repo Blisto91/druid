@@ -130,3 +130,4 @@ jobs:
           cargo clean -p druid-shell -p druid -p druid-derive
           Remove-Item target/* -include *druid* -Recurse -Force
         if: steps.target-cache.outputs.cache != 'true'
+
