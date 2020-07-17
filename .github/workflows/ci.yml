@@ -32,26 +32,6 @@ jobs:
         with:
           name: lockfile
           path: Cargo.lock
-   
-  rustfmt:
-    runs-on: ubuntu-latest
-    name: cargo fmt
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          components: rustfmt
-          override: true
-
-      - name: cargo fmt
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
 
   test-nightly:
     needs: update-deps
@@ -97,32 +77,35 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-nightly8-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly9-target-${{ hashFiles('Cargo.lock') }}
+
+      - name: cargo test druid-derive
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=druid-derive/Cargo.toml --locked
+
+      - name: cargo test druid
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=druid/Cargo.toml --locked --features=svg,image,im
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=druid-shell/Cargo.toml --locked -Zfeatures=dev_dep
+          args: --manifest-path=druid-shell/Cargo.toml --locked
 
-      - name: cargo test druid-derive
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --manifest-path=druid-derive/Cargo.toml --locked --verbose
 
-      - name: cargo test druid
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --manifest-path=druid/Cargo.toml --locked --verbose --features=svg,image,im
+
 
       - name: cargo test book examples
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=docs/book_examples/Cargo.toml --locked --verbose
+          args: --manifest-path=docs/book_examples/Cargo.toml --locked
 
       # After default features are done, also perform X11 testing on Linux.
       # This is better than a separate job because common dependencies are already built.
@@ -130,14 +113,14 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=druid-shell/Cargo.toml --locked --verbose --features=x11
+          args: --manifest-path=druid-shell/Cargo.toml --locked --features=x11
         if: contains(matrix.os, 'ubuntu')
 
       - name: cargo test druid (X11)
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=druid/Cargo.toml --locked --verbose --features=x11
+          args: --manifest-path=druid/Cargo.toml --locked --features=x11
         if: contains(matrix.os, 'ubuntu')
 
       # Remove druid build files from target before caching
@@ -147,27 +130,3 @@ jobs:
           cargo clean -p druid-shell -p druid -p druid-derive
           Remove-Item target/* -include *druid* -Recurse -Force
         if: steps.target-cache.outputs.cache != 'true'
-
-  mdbook-build:
-    runs-on: ubuntu-latest
-    name: mdbook build
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          override: true
-          
-      - name: install mdbook
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: --vers "^0.3" mdbook
-
-      - name: mdbook build
-        run: mdbook build
-        working-directory: ./docs
-
