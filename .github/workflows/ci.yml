@@ -97,7 +97,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-nightly7-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly8-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
@@ -106,23 +106,23 @@ jobs:
           command: test
           args: --manifest-path=druid-shell/Cargo.toml --locked -Zfeatures=dev_dep
 
-      - name: cargo test druid
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --manifest-path=druid/Cargo.toml --locked --verbose --features=svg,image,im -Zfeatures=dev_dep
-
       - name: cargo test druid-derive
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=druid-derive/Cargo.toml --locked --verbose -Zfeatures=dev_dep
+          args: --manifest-path=druid-derive/Cargo.toml --locked --verbose
+
+      - name: cargo test druid
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=druid/Cargo.toml --locked --verbose --features=svg,image,im
 
       - name: cargo test book examples
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=docs/book_examples/Cargo.toml --locked --verbose -Zfeatures=dev_dep
+          args: --manifest-path=docs/book_examples/Cargo.toml --locked --verbose
 
       # After default features are done, also perform X11 testing on Linux.
       # This is better than a separate job because common dependencies are already built.
@@ -130,14 +130,14 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=druid-shell/Cargo.toml --locked --verbose --features=x11 -Zfeatures=dev_dep
+          args: --manifest-path=druid-shell/Cargo.toml --locked --verbose --features=x11
         if: contains(matrix.os, 'ubuntu')
 
       - name: cargo test druid (X11)
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=druid/Cargo.toml --locked --verbose --features=x11 -Zfeatures=dev_dep
+          args: --manifest-path=druid/Cargo.toml --locked --verbose --features=x11
         if: contains(matrix.os, 'ubuntu')
 
       # Remove druid build files from target before caching
