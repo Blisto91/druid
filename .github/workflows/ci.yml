@@ -98,7 +98,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-stable-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-stable2-target-${{ hashFiles('Cargo.lock') }}
           
       # Clippy packages in deeper-to-higher dependency order
       - name: cargo clippy druid-shell
@@ -233,7 +233,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-stable-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-wasm2-target-${{ hashFiles('Cargo.lock') }}
           
       - name: install wasm-pack
         run: cargo install wasm-pack
@@ -313,7 +313,9 @@ jobs:
 
       # Remove druid build files from target before caching
       - name: clean druid artifacts
-        run: cargo clean -p druid-shell -p druid -p druid-derive
+        run: |
+          cargo clean -p druid-shell -p druid -p druid-derive
+          cargo clean --target wasm32-unknown-unknown -p druid-shell -p druid-derive -p druid
         if: steps.target-cache.outputs.cache != 'true'
 
   test-nightly:
@@ -360,7 +362,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-nightly-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly2-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
@@ -452,7 +454,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-doc-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-doc2-target-${{ hashFiles('Cargo.lock') }}
 
       # Doc packages in deeper-to-higher dependency order
       - name: cargo doc druid-shell
