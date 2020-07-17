@@ -127,4 +127,3 @@ jobs:
           Remove-Item target/* -include *druid* -Recurse -Force
           Remove-Item -path target/debug/examples -Recurse -Force
         if: steps.target-cache.outputs.cache != 'true'
-
