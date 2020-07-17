@@ -250,7 +250,7 @@ jobs:
         with:
           command: clippy
           # TODO: Add svg feature when it's no longer broken with wasm
-          args: --manifest-path=druid/Cargo.toml --all-targets --features=image,im --target wasm32-unknown-unknown
+          args: --manifest-path=druid/Cargo.toml --frozen --all-targets --features=image,im --target wasm32-unknown-unknown
 
       - name: cargo clippy druid-derive
         uses: actions-rs/cargo@v1
@@ -467,7 +467,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: --manifest-path=druid/Cargo.toml --features=svg,image,im --document-private-items
+          args: --manifest-path=druid/Cargo.toml --locked --features=svg,image,im --document-private-items
 
       - name: cargo doc druid-derive
         uses: actions-rs/cargo@v1
