@@ -10,10 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         
-      - name: powershell location
-        shell: pwsh
-        run: Get-Location
-        
       - name: Generate Cargo.lock
         run: cargo generate-lockfile
         
@@ -68,10 +64,6 @@ jobs:
     name: cargo clippy+test
     steps:
       - uses: actions/checkout@v2
-
-      - name: powershell location
-        shell: pwsh
-        run: Get-Location
 
       - name: install libgtk-3-dev libx11-dev
         run: |
@@ -190,7 +182,10 @@ jobs:
 
       # Remove druid build files from target before caching
       - name: clean druid artifacts
-        run: cargo clean -p druid-shell -p druid -p druid-derive
+        shell: pwsh
+        run: |
+          cargo clean -p druid-shell -p druid -p druid-derive
+          Remove-Item target/* -include *druid* -Recurse -Force
         if: steps.target-cache.outputs.cache != 'true'
         
   test-stable-wasm:
@@ -321,9 +316,11 @@ jobs:
 
       # Remove druid build files from target before caching
       - name: clean druid artifacts
+        shell: pwsh
         run: |
           cargo clean -p druid-shell -p druid -p druid-derive
-          cargo clean --target wasm32-unknown-unknown -p druid-shell -p druid-derive -p druid
+          cargo clean --target wasm32-unknown-unknown -p druid-shell -p druid -p druid-derive
+          Remove-Item target/* -include *druid* -Recurse -Force
         if: steps.target-cache.outputs.cache != 'true'
 
   test-nightly:
@@ -415,7 +412,10 @@ jobs:
 
       # Remove druid build files from target before caching
       - name: clean druid artifacts
-        run: cargo clean -p druid-shell -p druid -p druid-derive
+        shell: pwsh
+        run: |
+          cargo clean -p druid-shell -p druid -p druid-derive
+          Remove-Item target/* -include *druid* -Recurse -Force
         if: steps.target-cache.outputs.cache != 'true'
 
   check-docs:
@@ -499,7 +499,10 @@ jobs:
 
       # Remove druid build files from target before caching
       - name: clean druid artifacts
-        run: cargo clean -p druid-shell -p druid -p druid-derive
+        shell: pwsh
+        run: |
+          cargo clean -p druid-shell -p druid -p druid-derive
+          Remove-Item target/* -include *druid* -Recurse -Force
         if: steps.target-cache.outputs.cache != 'true'
 
   mdbook-build:
