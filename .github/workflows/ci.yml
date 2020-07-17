@@ -77,7 +77,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-nightly11-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly12-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
