@@ -98,7 +98,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-stable-target-${{ hashFiles('Cargo.lock') }}
           
       # Clippy packages in deeper-to-higher dependency order
       - name: cargo clippy druid-shell
@@ -228,6 +228,13 @@ jobs:
             ~/.cargo/git/db
           key: cargo-deps-${{ hashFiles('Cargo.lock') }}
           
+      - id: target-cache
+        name: Restore target cache
+        uses: actions/cache@v2
+        with:
+          path: target/
+          key: ${{ matrix.os }}-stable-target-${{ hashFiles('Cargo.lock') }}
+          
       - name: install wasm-pack
         run: cargo install wasm-pack
           
@@ -347,7 +354,14 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
           key: cargo-deps-${{ hashFiles('Cargo.lock') }}
-          
+
+      - id: target-cache
+        name: Restore target cache
+        uses: actions/cache@v2
+        with:
+          path: target/
+          key: ${{ matrix.os }}-nightly-target-${{ hashFiles('Cargo.lock') }}
+
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
         uses: actions-rs/cargo@v1
@@ -432,7 +446,14 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
           key: cargo-deps-${{ hashFiles('Cargo.lock') }}
-          
+
+      - id: target-cache
+        name: Restore target cache
+        uses: actions/cache@v2
+        with:
+          path: target/
+          key: ${{ matrix.os }}-doc-target-${{ hashFiles('Cargo.lock') }}
+
       # Doc packages in deeper-to-higher dependency order
       - name: cargo doc druid-shell
         uses: actions-rs/cargo@v1
@@ -468,9 +489,7 @@ jobs:
 
       # Remove druid build files from target before caching
       - name: clean druid artifacts
-        run: |
-          cargo clean -p druid-shell -p druid -p druid-derive
-          cargo clean --doc
+        run: cargo clean -p druid-shell -p druid -p druid-derive
         if: steps.target-cache.outputs.cache != 'true'
 
   mdbook-build:
