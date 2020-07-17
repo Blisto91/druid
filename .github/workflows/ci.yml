@@ -98,7 +98,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-stable5-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-stable6-target-${{ hashFiles('Cargo.lock') }}
           
       # Clippy packages in deeper-to-higher dependency order
       - name: cargo clippy druid-shell
@@ -236,7 +236,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-wasm5-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-wasm6-target-${{ hashFiles('Cargo.lock') }}
           
       - name: install wasm-pack
         run: cargo install wasm-pack
@@ -367,7 +367,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-nightly5-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly6-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
@@ -462,7 +462,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-doc5-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-doc6-target-${{ hashFiles('Cargo.lock') }}
 
       # Doc packages in deeper-to-higher dependency order
       - name: cargo doc druid-shell
