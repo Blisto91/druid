@@ -77,19 +77,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-nightly9-target-${{ hashFiles('Cargo.lock') }}
-
-      - name: cargo test druid-derive
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --manifest-path=druid-derive/Cargo.toml --locked
-
-      - name: cargo test druid
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --manifest-path=druid/Cargo.toml --locked --features=svg,image,im
+          key: ${{ matrix.os }}-nightly10-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
@@ -98,8 +86,17 @@ jobs:
           command: test
           args: --manifest-path=druid-shell/Cargo.toml --locked
 
+      - name: cargo test druid
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=druid/Cargo.toml --locked --features=svg,image,im
 
-
+      - name: cargo test druid-derive
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=druid-derive/Cargo.toml --locked
 
       - name: cargo test book examples
         uses: actions-rs/cargo@v1
@@ -124,10 +121,10 @@ jobs:
         if: contains(matrix.os, 'ubuntu')
 
       # Remove druid build files from target before caching
-      - name: clean druid artifacts
-        shell: pwsh
-        run: |
-          cargo clean -p druid-shell -p druid -p druid-derive
-          Remove-Item target/* -include *druid* -Recurse -Force
-        if: steps.target-cache.outputs.cache != 'true'
+      #- name: clean druid artifacts
+       # shell: pwsh
+        #run: |
+         # cargo clean -p druid-shell -p druid -p druid-derive
+          #Remove-Item target/* -include *druid* -Recurse -Force
+        #if: steps.target-cache.outputs.cache != 'true'
 
