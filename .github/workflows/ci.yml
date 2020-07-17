@@ -243,26 +243,26 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --manifest-path=druid-shell/Cargo.toml --locked --all-targets --target wasm32-unknown-unknown -- -D warnings
+          args: --manifest-path=druid-shell/Cargo.toml --locked --all-targets --target wasm32-unknown-unknown
 
       - name: cargo clippy druid
         uses: actions-rs/cargo@v1
         with:
           command: clippy
           # TODO: Add svg feature when it's no longer broken with wasm
-          args: --manifest-path=druid/Cargo.toml --locked --all-targets --features=image,im --target wasm32-unknown-unknown -- -D warnings
+          args: --manifest-path=druid/Cargo.toml --locked --all-targets --features=image,im --target wasm32-unknown-unknown
 
       - name: cargo clippy druid-derive
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --manifest-path=druid-derive/Cargo.toml --locked --all-targets --target wasm32-unknown-unknown -- -D warnings
+          args: --manifest-path=druid-derive/Cargo.toml --locked --all-targets --target wasm32-unknown-unknown
 
       - name: cargo clippy book examples
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --manifest-path=docs/book_examples/Cargo.toml --locked --all-targets --target wasm32-unknown-unknown -- -D warnings
+          args: --manifest-path=docs/book_examples/Cargo.toml --locked --all-targets --target wasm32-unknown-unknown
 
       # Test wasm32 relevant packages in deeper-to-higher dependency order
       # TODO: Find a way to make tests work. Until then the tests are merely compiled.
@@ -296,7 +296,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --manifest-path=druid/examples/web/Cargo.toml --locked --target wasm32-unknown-unknown -- -D warnings
+          args: --manifest-path=druid/examples/web/Cargo.toml --locked --target wasm32-unknown-unknown
 
       - name: wasm-pack build examples
         run: wasm-pack build --dev --target web druid/examples/web
@@ -306,7 +306,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --manifest-path=druid/examples/hello_web/Cargo.toml --locked --target wasm32-unknown-unknown -- -D warnings
+          args: --manifest-path=druid/examples/hello_web/Cargo.toml --locked --target wasm32-unknown-unknown
 
       - name: wasm-pack build hello_web example
         run: wasm-pack build --dev --target web druid/examples/hello_web
