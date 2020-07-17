@@ -98,7 +98,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-stable3-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-stable4-target-${{ hashFiles('Cargo.lock') }}
           
       # Clippy packages in deeper-to-higher dependency order
       - name: cargo clippy druid-shell
@@ -111,7 +111,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --manifest-path=druid/Cargo.toml --locked --all-targets --features=svg,image,im
+          args: --manifest-path=druid/Cargo.toml --all-targets --features=svg,image,im
 
       - name: cargo clippy druid-derive
         uses: actions-rs/cargo@v1
@@ -233,7 +233,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-wasm3-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-wasm4-target-${{ hashFiles('Cargo.lock') }}
           
       - name: install wasm-pack
         run: cargo install wasm-pack
@@ -250,7 +250,7 @@ jobs:
         with:
           command: clippy
           # TODO: Add svg feature when it's no longer broken with wasm
-          args: --manifest-path=druid/Cargo.toml --locked --all-targets --features=image,im --target wasm32-unknown-unknown
+          args: --manifest-path=druid/Cargo.toml --all-targets --features=image,im --target wasm32-unknown-unknown
 
       - name: cargo clippy druid-derive
         uses: actions-rs/cargo@v1
@@ -362,7 +362,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-nightly3-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly4-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
@@ -375,7 +375,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=druid/Cargo.toml --locked --features=svg,image,im
+          args: --manifest-path=druid/Cargo.toml --features=svg,image,im
 
       - name: cargo test druid-derive
         uses: actions-rs/cargo@v1
@@ -454,7 +454,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-doc3-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-doc4-target-${{ hashFiles('Cargo.lock') }}
 
       # Doc packages in deeper-to-higher dependency order
       - name: cargo doc druid-shell
@@ -467,7 +467,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: --manifest-path=druid/Cargo.toml --locked --features=svg,image,im --document-private-items
+          args: --manifest-path=druid/Cargo.toml --features=svg,image,im --document-private-items
 
       - name: cargo doc druid-derive
         uses: actions-rs/cargo@v1
