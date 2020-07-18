@@ -28,7 +28,7 @@ jobs:
             ~/.cargo/registry/index
             ~/.cargo/registry/cache
             ~/.cargo/git/db
-          key: cargo-deps4-${{ hashFiles('Cargo.lock') }}
+          key: cargo-deps-${{ hashFiles('Cargo.lock') }}
         
       - if: steps.cargo-deps.outputs.cache-hit != 'true'
         name: Fetch dependencies
@@ -52,10 +52,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: home dir
-        run: echo $HOME
-
-
       - name: install libgtk-dev libx11-dev
         run: |
           sudo apt update
@@ -74,11 +70,6 @@ jobs:
         with:
           name: lockfile
 
-      - name: check home dir
-        shell: pwsh
-        run: Get-ChildItem -Path $HOME -Force
-
-
       - name: Restore dependency crates
         uses: actions/cache@v2
         with:
@@ -86,7 +77,11 @@ jobs:
             ~/.cargo/registry/index
             ~/.cargo/registry/cache
             ~/.cargo/git/db
-          key: cargo-deps4-${{ hashFiles('Cargo.lock') }}
+          key: cargo-deps-${{ hashFiles('Cargo.lock') }}
+
+      - name: check dir
+        shell: pwsh
+        run: Get-ChildItem * -Force
 
       - id: target-cache
         name: Restore target cache
