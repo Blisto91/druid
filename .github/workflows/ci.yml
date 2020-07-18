@@ -48,7 +48,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       CARGO_INCREMENTAL: 1
-      CARGO_PROFILE_DEV_LTO: 'thin'
       CARGO_PROFILE_DEV_OPT_LEVEL: 'z'
       CARGO_PROFILE_DEV_CODEGEN_UNITS: 1
     strategy:
