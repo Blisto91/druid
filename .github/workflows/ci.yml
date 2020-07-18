@@ -25,9 +25,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            ~/.cargo/registry/index
-            ~/.cargo/registry/cache
-            ~/.cargo/git/db
+            $HOME/.cargo/registry/index
+            $HOME/.cargo/registry/cache
+            $HOME/.cargo/git/db
           key: cargo-deps-${{ hashFiles('Cargo.lock') }}
         
       - if: steps.cargo-deps.outputs.cache-hit != 'true'
