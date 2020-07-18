@@ -32,9 +32,7 @@ jobs:
         
       - if: steps.cargo-deps.outputs.cache-hit != 'true'
         name: Fetch dependencies
-        run: |
-          cargo fetch --locked
-          cargo fetch --locked --target x86_64-pc-windows-msvc
+        run: cargo fetch --locked
         
       - name: Upload Cargo.lock
         uses: actions/upload-artifact@v2
@@ -53,6 +51,9 @@ jobs:
     name: cargo test nightly
     steps:
       - uses: actions/checkout@v2
+
+      - name: home dir
+        run: echo $HOME
 
       - name: install libgtk-dev libx11-dev
         run: |
@@ -80,17 +81,6 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
           key: cargo-deps4-${{ hashFiles('Cargo.lock') }}
-
-      - name: Restore dependency crates
-        uses: actions/cache@v2
-        with:
-          path: |
-            %UserProfile%/.cargo/registry/index
-            %UserProfile%/.cargo/registry/cache
-            %UserProfile%/.cargo/git/db
-          key: cargo-deps4-${{ hashFiles('Cargo.lock') }}
-        if: contains(matrix.os, 'windows')
-
 
       - id: target-cache
         name: Restore target cache
