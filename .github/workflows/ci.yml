@@ -81,6 +81,17 @@ jobs:
             ~/.cargo/git/db
           key: cargo-deps4-${{ hashFiles('Cargo.lock') }}
 
+      - name: Restore dependency crates
+        uses: actions/cache@v2
+        with:
+          path: |
+            %UserProfile%/.cargo/registry/index
+            %UserProfile%/.cargo/registry/cache
+            %UserProfile%/.cargo/git/db
+          key: cargo-deps4-${{ hashFiles('Cargo.lock') }}
+        if: contains(matrix.os, 'windows')
+
+
       - id: target-cache
         name: Restore target cache
         uses: actions/cache@v2
