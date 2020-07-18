@@ -48,6 +48,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       CARGO_INCREMENTAL: 1
+      CARGO_PROFILE_DEV_LTO: 'thin'
+      CARGO_PROFILE_DEV_OPT_LEVEL: 'z'
+      CARGO_PROFILE_DEV_CODEGEN_UNITS: 1
     strategy:
       matrix:
         os: [macOS-latest, windows-2019, ubuntu-latest]
@@ -87,7 +90,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-nightly14-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly15-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
@@ -130,11 +133,4 @@ jobs:
           args: --manifest-path=druid/Cargo.toml --locked --features=x11
         if: contains(matrix.os, 'ubuntu')
 
-      # Remove druid build files from target before caching
-      - name: clean druid artifacts
-        shell: pwsh
-        run: Remove-Item -path target/debug/examples -Recurse -Force
-        if: steps.target-cache.outputs.cache != 'true'
-        
-#Remove-Item target/* -include *druid* -Recurse -Force
 
