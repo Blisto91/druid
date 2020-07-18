@@ -6,7 +6,7 @@ on:
 
 jobs:
   update-deps:
-    runs-on: ubuntu-latest
+    runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
 
@@ -25,9 +25,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            $HOME/.cargo/registry/index
-            $HOME/.cargo/registry/cache
-            $HOME/.cargo/git/db
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
           key: cargo-deps-${{ hashFiles('Cargo.lock') }}
         
       - if: steps.cargo-deps.outputs.cache-hit != 'true'
@@ -70,17 +70,13 @@ jobs:
         with:
           name: lockfile
 
-      - name: check dir
-        shell: pwsh
-        run: test-path -Path ~/.cargo
-
       - name: Restore dependency crates
         uses: actions/cache@v2
         with:
           path: |
-            $HOME/.cargo/registry/index
-            $HOME/.cargo/registry/cache
-            $HOME/.cargo/git/db
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
           key: cargo-deps-${{ hashFiles('Cargo.lock') }}
 
       - id: target-cache
