@@ -9,7 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        
+
+      - name: install nightly toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          profile: minimal
+          override: true
+
       - name: Generate Cargo.lock
         run: cargo generate-lockfile
         
@@ -21,7 +28,7 @@ jobs:
             ~/.cargo/registry/index
             ~/.cargo/registry/cache
             ~/.cargo/git/db
-          key: cargo-deps-${{ hashFiles('Cargo.lock') }}
+          key: cargo-deps3-${{ hashFiles('Cargo.lock') }}
         
       - if: steps.cargo-deps.outputs.cache-hit != 'true'
         name: Fetch dependencies
@@ -70,14 +77,14 @@ jobs:
             ~/.cargo/registry/index
             ~/.cargo/registry/cache
             ~/.cargo/git/db
-          key: cargo-deps-${{ hashFiles('Cargo.lock') }}
+          key: cargo-deps3-${{ hashFiles('Cargo.lock') }}
 
       - id: target-cache
         name: Restore target cache
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-nightly13-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly14-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
