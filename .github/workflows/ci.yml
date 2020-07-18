@@ -70,6 +70,10 @@ jobs:
         with:
           name: lockfile
 
+      - name: check dir before
+        shell: pwsh
+        run: Get-ChildItem -Path $HOME/.cargo/registry/cache -Force
+
       - name: Restore dependency crates
         uses: actions/cache@v2
         with:
@@ -79,9 +83,9 @@ jobs:
             ~/.cargo/git/db
           key: cargo-deps-${{ hashFiles('Cargo.lock') }}
 
-      - name: check dir
+      - name: check dir after
         shell: pwsh
-        run: Get-ChildItem * -Force
+        run: Get-ChildItem -Path $HOME/.cargo/registry/cache -Force
 
       - id: target-cache
         name: Restore target cache
