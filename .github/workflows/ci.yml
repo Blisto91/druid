@@ -72,7 +72,7 @@ jobs:
 
       - name: check dir before
         shell: pwsh
-        run: Get-ChildItem -Path $HOME/.cargo/registry/cache -Force
+        run: test-path -Path $HOME/.cargo/registry/cache
 
       - name: Restore dependency crates
         uses: actions/cache@v2
@@ -85,7 +85,7 @@ jobs:
 
       - name: check dir after
         shell: pwsh
-        run: Get-ChildItem -Path $HOME/.cargo/registry/cache -Force
+        run: test-path -Path $HOME/.cargo/registry/cache
 
       - id: target-cache
         name: Restore target cache
