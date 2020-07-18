@@ -73,7 +73,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: lockfile
-          
+
+      - name: check home dir
+        shell: pwsh
+        run: Get-ChildItem -Path $HOME -Force
+
+
       - name: Restore dependency crates
         uses: actions/cache@v2
         with:
