@@ -21,9 +21,9 @@ jobs:
             ~/.cargo/registry/index
             ~/.cargo/registry/cache
             ~/.cargo/git/db
-          key: cargo-deps-${{ hashFiles2('Cargo.lock') }}
+          key: cargo-deps2-${{ hashFiles('Cargo.lock') }}
         
-      - if: steps.cargo-deps.outputs.cache-hit != 'true'
+      - if: steps.cargo-deps2.outputs.cache-hit != 'true'
         name: Fetch dependencies
         run: |
           cargo fetch --target x86_64-pc-windows-msvc --locked
@@ -74,7 +74,7 @@ jobs:
             ~/.cargo/registry/index
             ~/.cargo/registry/cache
             ~/.cargo/git/db
-          key: cargo-deps-${{ hashFiles('Cargo.lock') }}
+          key: cargo-deps2-${{ hashFiles('Cargo.lock') }}
 
       - id: target-cache
         name: Restore target cache
