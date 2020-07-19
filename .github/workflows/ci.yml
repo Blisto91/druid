@@ -169,7 +169,9 @@ jobs:
         if: contains(matrix.os, 'ubuntu')
 
       - name: clean druid artifacts
-        run: cargo clean -p druid-derive -p druid -p druid-shell
+        run: |
+          cargo clean -p druid-derive -p druid -p druid-shell
+          Remove-Item target/* -include *druid* -Recurse -Force
         if: steps.target-cache.outputs.cache != 'true'
 
   test-stable-wasm:
@@ -294,7 +296,9 @@ jobs:
         run: wasm-pack build --dev --target web druid/examples/hello_web
 
       - name: clean druid artifacts
-        run: cargo clean -p druid-derive -p druid -p druid-shell
+        run: |
+          cargo clean -p druid-derive -p druid -p druid-shell
+          Remove-Item target/* -include *druid* -Recurse -Force
         if: steps.target-cache.outputs.cache != 'true'
 
   test-nightly:
@@ -381,7 +385,9 @@ jobs:
         if: contains(matrix.os, 'ubuntu')
 
       - name: clean druid artifacts
-        run: cargo clean -p druid-derive -p druid -p druid-shell
+        run: |
+          cargo clean -p druid-derive -p druid -p druid-shell
+          Remove-Item target/* -include *druid* -Recurse -Force
         if: steps.target-cache.outputs.cache != 'true'
 
   check-docs:
@@ -459,7 +465,9 @@ jobs:
         if: contains(matrix.os, 'ubuntu')
 
       - name: clean druid artifacts
-        run: cargo clean -p druid-derive -p druid -p druid-shell
+        run: |
+          cargo clean -p druid-derive -p druid -p druid-shell
+          Remove-Item target/* -include *druid* -Recurse -Force
         if: steps.target-cache.outputs.cache != 'true'
 
   mdbook-build:
