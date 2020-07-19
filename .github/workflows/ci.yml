@@ -86,7 +86,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             target/
-          key: ${{ matrix.os }}-stable-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-stable1-target-${{ hashFiles('Cargo.lock') }}
           
       # Clippy packages in deeper-to-higher dependency order
       - name: cargo clippy druid-shell
@@ -220,7 +220,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             target/
-          key: ${{ matrix.os }}-wasm-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-wasm1-target-${{ hashFiles('Cargo.lock') }}
           
       # Clippy wasm32 relevant packages in deeper-to-higher dependency order
       - name: cargo clippy druid-shell
@@ -341,7 +341,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             target/
-          key: ${{ matrix.os }}-nightly-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly1-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
@@ -429,7 +429,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             target/
-          key: ${{ matrix.os }}-doc-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-doc1-target-${{ hashFiles('Cargo.lock') }}
           
       # Doc packages in deeper-to-higher dependency order
       - name: cargo doc druid-shell
