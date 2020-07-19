@@ -25,6 +25,277 @@ jobs:
         with:
           name: lockfile
           path: Cargo.lock
+ 
+  rustfmt:
+    runs-on: ubuntu-latest
+    name: cargo fmt
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          components: rustfmt
+          override: true
+
+      - name: cargo fmt
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+  test-stable:
+    needs: update-deps
+    runs-on: ${{ matrix.os }}
+    env:
+      CARGO_INCREMENTAL: 0
+    strategy:
+      matrix:
+        os: [macOS-latest, windows-2019, ubuntu-latest]
+    name: cargo clippy+test
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install libgtk-3-dev libx11-dev
+        run: |
+          sudo apt update
+          sudo apt install libgtk-3-dev libx11-dev
+        if: contains(matrix.os, 'ubuntu')
+
+      - name: install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: clippy
+          profile: minimal
+          override: true
+
+      - name: Download Cargo.lock
+        uses: actions/download-artifact@v2
+        with:
+          name: lockfile
+
+      - id: target-cache
+        name: Restore target cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            target/
+          key: ${{ matrix.os }}-stable-target-${{ hashFiles('Cargo.lock') }}
+          
+      # Clippy packages in deeper-to-higher dependency order
+      - name: cargo clippy druid-shell
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=druid-shell/Cargo.toml --locked --all-targets -- -D warnings
+
+      - name: cargo clippy druid
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=druid/Cargo.toml --locked --all-targets --features=svg,image,im -- -D warnings
+
+      - name: cargo clippy druid-derive
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=druid-derive/Cargo.toml --locked --all-targets -- -D warnings
+
+      - name: cargo clippy book examples
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=docs/book_examples/Cargo.toml --locked --all-targets -- -D warnings
+
+      # Test packages in deeper-to-higher dependency order
+      - name: cargo test druid-shell
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=druid-shell/Cargo.toml --locked
+
+      - name: cargo test druid
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=druid/Cargo.toml --locked --features=svg,image,im
+
+      - name: cargo test druid-derive
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=druid-derive/Cargo.toml --locked
+
+      - name: cargo test book examples
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=docs/book_examples/Cargo.toml --locked
+
+      # After default features are done, also perform X11 clippy+testing on Linux.
+      # This is better than a separate job because common dependencies are already built.
+      - name: cargo clippy druid-shell (X11)
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=druid-shell/Cargo.toml --locked --all-targets --features=x11 -- -D warnings
+        if: contains(matrix.os, 'ubuntu')
+
+      - name: cargo clippy druid (X11)
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=druid/Cargo.toml --locked --all-targets --features=x11 -- -D warnings
+        if: contains(matrix.os, 'ubuntu')
+
+      - name: cargo test druid-shell (X11)
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=druid-shell/Cargo.toml --locked --features=x11
+        if: contains(matrix.os, 'ubuntu')
+
+      - name: cargo test druid (X11)
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=druid/Cargo.toml --locked --features=x11
+        if: contains(matrix.os, 'ubuntu')
+
+      - name: clean druid artifacts
+        run: cargo clean -p druid-derive -p druid -p druid-shell
+        if: steps.target-cache.outputs.cache != 'true'
+
+  test-stable-wasm:
+    needs: update-deps
+    runs-on: ${{ matrix.os }}
+    env:
+      CARGO_INCREMENTAL: 0
+    strategy:
+      matrix:
+        os: [macOS-latest, windows-2019, ubuntu-latest]
+
+    name: cargo clippy+test (wasm32)
+    steps:
+      - uses: actions/checkout@v2
+
+      # libgtk-dev seems to be needed by e.g. druid-derive
+      - name: install libgtk-dev
+        run: |
+          sudo apt update
+          sudo apt install libgtk-3-dev
+        if: contains(matrix.os, 'ubuntu')
+
+      - name: install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-unknown-unknown
+          components: clippy
+          profile: minimal
+          override: true
+
+      - name: install wasm-pack
+        run: cargo install wasm-pack
+
+      - name: Download Cargo.lock
+        uses: actions/download-artifact@v2
+        with:
+          name: lockfile
+
+      - id: target-cache
+        name: Restore target cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            target/
+          key: ${{ matrix.os }}-wasm-target-${{ hashFiles('Cargo.lock') }}
+          
+      # Clippy wasm32 relevant packages in deeper-to-higher dependency order
+      - name: cargo clippy druid-shell
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=druid-shell/Cargo.toml --locked --all-targets --target wasm32-unknown-unknown -- -D warnings
+
+      - name: cargo clippy druid
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          # TODO: Add svg feature when it's no longer broken with wasm
+          args: --manifest-path=druid/Cargo.toml --locked --all-targets --features=image,im --target wasm32-unknown-unknown -- -D warnings
+
+      - name: cargo clippy druid-derive
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=druid-derive/Cargo.toml --locked --all-targets --target wasm32-unknown-unknown -- -D warnings
+
+      - name: cargo clippy book examples
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=docs/book_examples/Cargo.toml --locked --all-targets --target wasm32-unknown-unknown -- -D warnings
+
+      # Test wasm32 relevant packages in deeper-to-higher dependency order
+      # TODO: Find a way to make tests work. Until then the tests are merely compiled.
+      - name: cargo test compile druid-shell
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=druid-shell/Cargo.toml --locked --no-run --target wasm32-unknown-unknown
+
+      - name: cargo test compile druid
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          # TODO: Add svg feature when it's no longer broken with wasm
+          args: --manifest-path=druid/Cargo.toml --locked --features=image,im --no-run --target wasm32-unknown-unknown
+
+      - name: cargo test compile druid-derive
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=druid-derive/Cargo.toml --locked --no-run --target wasm32-unknown-unknown
+
+      - name: cargo test compile book examples
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=docs/book_examples/Cargo.toml --locked --no-run --target wasm32-unknown-unknown
+
+      # Clippy and build the special druid-web-examples package.
+      - name: cargo clippy druid-web-examples
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=druid/examples/web/Cargo.toml --locked --target wasm32-unknown-unknown -- -D warnings
+
+      - name: wasm-pack build examples
+        run: wasm-pack build --dev --target web druid/examples/web
+
+      # Clippy and build the hello_web example
+      - name: cargo clippy hello_web example
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=druid/examples/hello_web/Cargo.toml --locked --target wasm32-unknown-unknown -- -D warnings
+
+      - name: wasm-pack build hello_web example
+        run: wasm-pack build --dev --target web druid/examples/hello_web
+
+      - name: clean druid artifacts
+        run: cargo clean -p druid-derive -p druid -p druid-shell
+        if: steps.target-cache.outputs.cache != 'true'
 
   test-nightly:
     needs: update-deps
@@ -66,7 +337,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             target/
-          key: ${{ matrix.os }}-nightly21-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
@@ -112,3 +383,104 @@ jobs:
       - name: clean druid artifacts
         run: cargo clean -p druid-derive -p druid -p druid-shell
         if: steps.target-cache.outputs.cache != 'true'
+
+  check-docs:
+    needs: update-deps
+    name: Docs
+    runs-on: ${{ matrix.os }}
+    env:
+      CARGO_INCREMENTAL: 0
+    strategy:
+      matrix:
+        os: [macOS-latest, windows-2019, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install libgtk-dev
+        run: |
+          sudo apt update
+          sudo apt install libgtk-3-dev
+        if: contains(matrix.os, 'ubuntu')
+
+      - name: install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+
+      - name: Download Cargo.lock
+        uses: actions/download-artifact@v2
+        with:
+          name: lockfile
+
+      - id: target-cache
+        name: Restore target cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            target/
+          key: ${{ matrix.os }}-doc-target-${{ hashFiles('Cargo.lock') }}
+          
+      # Doc packages in deeper-to-higher dependency order
+      - name: cargo doc druid-shell
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: --manifest-path=druid-shell/Cargo.toml --locked --document-private-items
+
+      - name: cargo doc druid
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: --manifest-path=druid/Cargo.toml --locked --features=svg,image,im --document-private-items
+
+      - name: cargo doc druid-derive
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: --manifest-path=druid-derive/Cargo.toml --locked --document-private-items
+
+      - name: cargo doc book examples
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: --manifest-path=docs/book_examples/Cargo.toml --locked --document-private-items
+
+      # On Linux also attempt docs for X11.
+      - name: cargo doc druid-shell (X11)
+        uses: actions-rs/cargo@v1
+        with:
+          command: doc
+          args: --manifest-path=druid-shell/Cargo.toml --locked --features=x11 --document-private-items
+        if: contains(matrix.os, 'ubuntu')
+
+      - name: clean druid artifacts
+        run: cargo clean -p druid-derive -p druid -p druid-shell
+        if: steps.target-cache.outputs.cache != 'true'
+
+  mdbook-build:
+    runs-on: ubuntu-latest
+    name: mdbook build
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+          
+      - name: install mdbook
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: --vers "^0.3" mdbook
+
+      - name: mdbook build
+        run: mdbook build
+        working-directory: ./docs
