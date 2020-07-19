@@ -132,4 +132,3 @@ jobs:
           args: --manifest-path=druid/Cargo.toml --locked --features=x11
         if: contains(matrix.os, 'ubuntu')
 
-
