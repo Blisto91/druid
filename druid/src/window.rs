@@ -52,8 +52,7 @@ pub struct Window<T> {
     pub(crate) focus: Option<WidgetId>,
     pub(crate) handle: WindowHandle,
     pub(crate) timers: HashMap<TimerToken, WidgetId>,
-    // delegate?
-    
+    // delegate?    
 }
 
 impl<T> Window<T> {
