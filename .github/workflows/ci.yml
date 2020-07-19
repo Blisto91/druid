@@ -66,8 +66,12 @@ jobs:
         name: Restore target cache
         uses: actions/cache@v2
         with:
-          path: target/
-          key: ${{ matrix.os }}-nightly17-target-${{ hashFiles('Cargo.lock') }}
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            target/
+          key: ${{ matrix.os }}-nightly18-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
