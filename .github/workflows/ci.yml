@@ -71,7 +71,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             target/
-          key: ${{ matrix.os }}-nightly19-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly20-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
@@ -115,6 +115,6 @@ jobs:
         if: contains(matrix.os, 'ubuntu')
 
       - name: clean druid artifacts
-        run: cargo clean -p druid-shell -p druid -p druid-derive
+        run: cargo clean -p druid-derive -p druid -p druid-shell
         if: steps.target-cache.outputs.cache != 'true'
 
