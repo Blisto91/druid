@@ -47,7 +47,6 @@ pub enum FieldKind {
 pub enum FieldIdent {
     Named(String),
     Unnamed(usize),
-    
 }
 
 impl FieldIdent {
