@@ -117,4 +117,3 @@ jobs:
       - name: clean druid artifacts
         run: cargo clean -p druid-derive -p druid -p druid-shell
         if: steps.target-cache.outputs.cache != 'true'
-
