@@ -169,6 +169,7 @@ jobs:
         if: contains(matrix.os, 'ubuntu')
 
       - name: clean druid artifacts
+        shell: pwsh
         run: |
           cargo clean -p druid-derive -p druid -p druid-shell
           Remove-Item target/* -include *druid* -Recurse -Force
@@ -296,6 +297,7 @@ jobs:
         run: wasm-pack build --dev --target web druid/examples/hello_web
 
       - name: clean druid artifacts
+        shell: pwsh
         run: |
           cargo clean -p druid-derive -p druid -p druid-shell
           Remove-Item target/* -include *druid* -Recurse -Force
@@ -385,6 +387,7 @@ jobs:
         if: contains(matrix.os, 'ubuntu')
 
       - name: clean druid artifacts
+        shell: pwsh
         run: |
           cargo clean -p druid-derive -p druid -p druid-shell
           Remove-Item target/* -include *druid* -Recurse -Force
@@ -465,6 +468,7 @@ jobs:
         if: contains(matrix.os, 'ubuntu')
 
       - name: clean druid artifacts
+        shell: pwsh
         run: |
           cargo clean -p druid-derive -p druid -p druid-shell
           Remove-Item target/* -include *druid* -Recurse -Force
