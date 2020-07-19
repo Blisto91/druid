@@ -31,6 +31,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       CARGO_INCREMENTAL: 0
+      RUSTFLAGS: -C embed-bitcode=no
       #CARGO_PROFILE_DEV_OPT_LEVEL: 'z'
       #CARGO_PROFILE_DEV_CODEGEN_UNITS: 1
       #CARGO_PROFILE_DEV_LTO: 'thin'
@@ -71,32 +72,32 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             target/
-          key: ${{ matrix.os }}-nightly20-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly21-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=druid-shell/Cargo.toml --locked
+          args: --manifest-path=druid-shell/Cargo.toml --locked --verbose
 
       - name: cargo test druid
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=druid/Cargo.toml --locked --features=svg,image,im
+          args: --manifest-path=druid/Cargo.toml --locked --verbose --features=svg,image,im
 
       - name: cargo test druid-derive
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=druid-derive/Cargo.toml --locked
+          args: --manifest-path=druid-derive/Cargo.toml --locked --verbose
 
       - name: cargo test book examples
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=docs/book_examples/Cargo.toml --locked
+          args: --manifest-path=docs/book_examples/Cargo.toml --locked --verbose
 
       # After default features are done, also perform X11 testing on Linux.
       # This is better than a separate job because common dependencies are already built.
@@ -104,14 +105,14 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=druid-shell/Cargo.toml --locked --features=x11
+          args: --manifest-path=druid-shell/Cargo.toml --locked --verbose --features=x11
         if: contains(matrix.os, 'ubuntu')
 
       - name: cargo test druid (X11)
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=druid/Cargo.toml --locked --features=x11
+          args: --manifest-path=druid/Cargo.toml --locked --verbose --features=x11
         if: contains(matrix.os, 'ubuntu')
 
       - name: clean druid artifacts
