@@ -6,10 +6,7 @@ on:
 
 jobs:
   update-deps:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-2019, ubuntu-latest]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
@@ -22,20 +19,6 @@ jobs:
 
       - name: Generate Cargo.lock
         run: cargo generate-lockfile
-        
-      - id: cargo-deps
-        name: Cache dependency crates
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry/index
-            ~/.cargo/registry/cache
-            ~/.cargo/git/db
-          key: cargo-deps5-${{ hashFiles('Cargo.lock') }}
-        
-      - if: steps.cargo-deps.outputs.cache-hit != 'true'
-        name: Fetch dependencies
-        run: cargo fetch --locked
         
       - name: Upload Cargo.lock
         uses: actions/upload-artifact@v2
@@ -50,10 +33,11 @@ jobs:
       CARGO_INCREMENTAL: 1
       CARGO_PROFILE_DEV_OPT_LEVEL: 'z'
       CARGO_PROFILE_DEV_CODEGEN_UNITS: 1
-      CARGO_PROFILE_DEV_LTO: 'fat'
+      CARGO_PROFILE_DEV_LTO: 'thin'
       CARGO_PROFILE_DEV_DEBUG: true
       CARGO_PROFILE_DEV_DEBUG_ASSERTIONS: true
     strategy:
+      fail-fast: false
       matrix:
         os: [macOS-latest, windows-2019, ubuntu-latest]
     name: cargo test nightly
@@ -78,21 +62,12 @@ jobs:
         with:
           name: lockfile
 
-      - name: Restore dependency crates
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry/index
-            ~/.cargo/registry/cache
-            ~/.cargo/git/db
-          key: cargo-deps5-${{ hashFiles('Cargo.lock') }}
-
       - id: target-cache
         name: Restore target cache
         uses: actions/cache@v2
         with:
           path: target/
-          key: ${{ matrix.os }}-nightly16-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly17-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
