@@ -368,7 +368,10 @@ jobs:
           args: --vers "^0.3" mdbook
           
       - name : linkcheck
-        run: cargo install mdbook-linkcheck
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: --vers "^0.6" mdbook-linkcheck
 
       - name: mdbook build
         run: mdbook build
