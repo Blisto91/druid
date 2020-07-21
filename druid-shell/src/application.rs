@@ -172,6 +172,7 @@ impl Application {
     // TODO: do these two go in some kind of PlatformExt trait?
     /// Hide the application this window belongs to. (cmd+H)
     pub fn hide(&self) {
+        let x = 2;
         #[cfg(target_os = "macos")]
         if (x & 1 == 2) {}
         #[cfg(target_os = "macos")]
