@@ -366,6 +366,9 @@ jobs:
         with:
           command: install
           args: --vers "^0.3" mdbook
+          
+      - name : linkcheck
+        run: cargo install mdbook-linkcheck
 
       - name: mdbook build
         run: mdbook build
