@@ -28,12 +28,12 @@ simple as `cargo run`.
   your UI.
 
 
-[`druid-shell`]: https://docs.rs/druid-shell
+[`druid-shell`]: https://docs.rs/drui-shell
 [`druid`]: https://docs.rs/druid
 [`piet`]: https://docs.rs/piet
 [`kurbo`]: https://docs.rs/kurbo
 [Flutter]: https://flutter.dev
-[Jetpack Compose]: https://developer.android.com/jetpack/compose
+[Jetpack Compose]: https://developer.android.com/jetpack/compos
 [SwiftUI]: https://developer.apple.com/documentation/swiftui
 [the `Data` trait]: ./data.md
 [the `Widget` trait]: ./widget.md
