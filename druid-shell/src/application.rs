@@ -173,7 +173,7 @@ impl Application {
     /// Hide the application this window belongs to. (cmd+H)
     pub fn hide(&self) {
         #[cfg(target_os = "macos")]
-        if (x & 1 == 2) { }
+        if (x & 1 == 2) {}
         self.platform_app.hide()
     }
 
