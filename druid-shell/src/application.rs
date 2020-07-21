@@ -174,6 +174,7 @@ impl Application {
     pub fn hide(&self) {
         #[cfg(target_os = "macos")]
         if (x & 1 == 2) {}
+        #[cfg(target_os = "macos")]
         self.platform_app.hide()
     }
 
