@@ -34,11 +34,31 @@ jobs:
           command: fmt
           args: --all -- --check
 
-      - name: Clippy
+      - name: cargo clippy druid-shell
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --all-targets
+          args: --manifest-path=druid-shell/Cargo.toml --all-targets
+
+      - name: cargo clippy druid
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          # TODO: Add svg feature when it's no longer broken with wasm
+          args: --manifest-path=druid/Cargo.toml --all-targets
+
+      - name: cargo clippy druid-derive
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=druid-derive/Cargo.toml --all-targets
+
+      - name: cargo clippy book examples
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --manifest-path=docs/book_examples/Cargo.toml --all-targets
+
 
 
   test-stable:
