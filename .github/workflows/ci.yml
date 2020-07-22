@@ -86,7 +86,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             target/
-          key: ${{ matrix.os }}-stable1-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-stable2-target-${{ hashFiles('Cargo.lock') }}
           
       # Clippy packages in deeper-to-higher dependency order
       - name: cargo clippy druid-shell
@@ -171,8 +171,9 @@ jobs:
       - name: clean druid artifacts
         shell: pwsh
         run: |
-          cargo clean -p druid-derive -p druid -p druid-shell
-          Remove-Item target/* -include *druid* -Recurse -Force
+          cargo clean -p druid
+          cargo clean -p druid-derive
+          cargo clean -p druid-shell
         if: steps.target-cache.outputs.cache != 'true'
 
   test-stable-wasm:
@@ -221,7 +222,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             target/
-          key: ${{ matrix.os }}-wasm1-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-wasm2-target-${{ hashFiles('Cargo.lock') }}
           
       # Clippy wasm32 relevant packages in deeper-to-higher dependency order
       - name: cargo clippy druid-shell
@@ -299,8 +300,9 @@ jobs:
       - name: clean druid artifacts
         shell: pwsh
         run: |
-          cargo clean -p druid-derive -p druid -p druid-shell
-          Remove-Item target/* -include *druid* -Recurse -Force
+          cargo clean -p druid
+          cargo clean -p druid-derive
+          cargo clean -p druid-shell
         if: steps.target-cache.outputs.cache != 'true'
 
   test-nightly:
@@ -343,7 +345,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             target/
-          key: ${{ matrix.os }}-nightly1-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-nightly2-target-${{ hashFiles('Cargo.lock') }}
 
       # Test packages in deeper-to-higher dependency order
       - name: cargo test druid-shell
@@ -389,8 +391,9 @@ jobs:
       - name: clean druid artifacts
         shell: pwsh
         run: |
-          cargo clean -p druid-derive -p druid -p druid-shell
-          Remove-Item target/* -include *druid* -Recurse -Force
+          cargo clean -p druid
+          cargo clean -p druid-derive
+          cargo clean -p druid-shell
         if: steps.target-cache.outputs.cache != 'true'
 
   check-docs:
@@ -432,7 +435,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             target/
-          key: ${{ matrix.os }}-doc1-target-${{ hashFiles('Cargo.lock') }}
+          key: ${{ matrix.os }}-doc2-target-${{ hashFiles('Cargo.lock') }}
           
       # Doc packages in deeper-to-higher dependency order
       - name: cargo doc druid-shell
@@ -470,8 +473,9 @@ jobs:
       - name: clean druid artifacts
         shell: pwsh
         run: |
-          cargo clean -p druid-derive -p druid -p druid-shell
-          Remove-Item target/* -include *druid* -Recurse -Force
+          cargo clean -p druid
+          cargo clean -p druid-derive
+          cargo clean -p druid-shell
         if: steps.target-cache.outputs.cache != 'true'
 
   mdbook-build:
