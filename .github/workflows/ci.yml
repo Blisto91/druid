@@ -3,7 +3,6 @@ on:
     branches: [$default_branch]
   pull_request:
 
-
 jobs:
   rustfmt:
     runs-on: ubuntu-latest
