@@ -1,7 +1,6 @@
 on:
   push:
-    branches:
-      - refs/heads/$default-branch
+    branches: [ $default-branch ]
   pull_request:
 
 
