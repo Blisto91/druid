@@ -4,6 +4,7 @@ on:
       - refs/heads/$default-branch
   pull_request:
 
+
 jobs:
   rustfmt:
     runs-on: ubuntu-latest
