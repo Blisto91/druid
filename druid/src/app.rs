@@ -33,6 +33,7 @@ pub struct AppLauncher<T> {
     env_setup: Option<Box<EnvSetupFn<T>>>,
     delegate: Option<Box<dyn AppDelegate<T>>>,
     ext_event_host: ExtEventHost,
+    
 }
 
 /// A description of a window to be instantiated.
