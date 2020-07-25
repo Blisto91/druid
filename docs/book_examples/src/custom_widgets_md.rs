@@ -13,7 +13,7 @@ fn make_color_swatch() -> Painter<Color> {
     Painter::new(|ctx: &mut PaintCtx, data: &Color, env: &Env| {
         let bounds = ctx.size().to_rect();
         let rounded = bounds.to_rounded_rect(CORNER_RADIUS);
-        ctx.fill(rounded, data);
+        ctx.fill(rounded, data)
         ctx.stroke(rounded, &env.get(druid::theme::PRIMARY_DARK), STROKE_WIDTH);
     })
 }
