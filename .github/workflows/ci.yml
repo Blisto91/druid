@@ -1,8 +1,7 @@
 on:
   push:
-    branches:
-      - master
-  pull_request:
+    branches: [ $default-branch ]
+  pull_request: [ $default-branch ]
 
 jobs:
   update-deps:
