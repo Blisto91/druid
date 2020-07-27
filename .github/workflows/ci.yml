@@ -355,11 +355,10 @@ jobs:
           profile: minimal
           override: true
 
-      - name: install mdbook
-        uses: actions-rs/cargo@v1
+      - name: Setup mdbook
+        uses: peaceiris/actions-mdbook@v1
         with:
-          command: install
-          args: --vers "^0.3" mdbook
+          mdbook-version: '^0.3'
           
       - name : linkcheck
         uses: actions-rs/cargo@v1
