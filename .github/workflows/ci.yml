@@ -1,10 +1,10 @@
 on:
   push:
     branches:
-      - default-branch
+      - $default-branch
   pull_request:
     branches:
-      - default-branch
+      - $default-branch
     
 jobs:
   update-deps:
