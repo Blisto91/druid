@@ -7,3 +7,4 @@ title = "Druid"
 
 [output.linkcheck]
 follow-web-links = false
+optional = true
