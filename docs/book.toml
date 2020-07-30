@@ -6,3 +6,4 @@ src = "src"
 title = "Druid"
 
 [output.linkcheck]
+follow-web-links = false
