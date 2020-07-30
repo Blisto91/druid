@@ -40,3 +40,4 @@ jobs:
       - name: mdbook build
         run: mdbook build
         working-directory: ./docs
+
