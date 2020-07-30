@@ -1,7 +1,7 @@
 # Druid mdBook documentation
 This folder contains Druid documentation in mdBook format. mdBook allows documentation written in
 markdown to be published as html. This README.md gives some pointers for contributers on how to
-edit, preview and publish the documentation.
+edit, preview and publish the documentation. TEEEST
 
 ## Editing
 mdBook handles writing documentation in a similar way to writing software. Documentation 'source
