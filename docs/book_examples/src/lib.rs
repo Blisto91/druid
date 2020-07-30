@@ -1,5 +1,5 @@
 //! Code samples used in the book, stored here so they are easier to test in CI.
-
+// testing
 #![allow(dead_code, unused_variables)]
 
 mod custom_widgets_md;
