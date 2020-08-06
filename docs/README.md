@@ -3,6 +3,7 @@ This folder contains Druid documentation in mdBook format. mdBook allows documen
 markdown to be published as html. This README.md gives some pointers for contributers on how to
 edit, preview and publish the documentation.
 
+
 ## Editing
 mdBook handles writing documentation in a similar way to writing software. Documentation 'source
 code' lives in the `docs/src` folder in the form of markdown files. It can be built and published
