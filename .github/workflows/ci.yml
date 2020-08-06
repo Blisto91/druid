@@ -2,15 +2,9 @@ on:
   push:
     branches: 
       - master 
-    paths:
-    - 'docs/**'
-    - '!docs/book_examples/**'
   pull_request:
     branches: 
       - master
-    paths:
-    - 'docs/**'
-    - '!docs/book_examples/**'
 
 jobs:
   
