@@ -15,7 +15,7 @@ widget.
 
 The most prominent role of `Env` is to store a set of typed keys and values. The
 `Env` can only store a few types of things; these are represented by the
-[`Value`] type, which looks like this:
+`Value` type, which looks like this:
 
 ```rust,noplaypen
 {{#include ../../druid/src/env.rs:value_type}}
@@ -86,7 +86,6 @@ In general, you should not need to worry about localization directly. See the
 
 [`Env`]: https://docs.rs/druid/0.6.0/druid/struct.Env.html
 [`Key`]: https://docs.rs/druid/0.6.0/druid/struct.Key.html
-[`Value`]: https://docs.rs/druid/0.6.0/druid/struct.Value.html
 [`LocalizedString`]: https://docs.rs/druid/0.6.0/druid/struct.LocalizedString.html
 [`resolve`]: https://docs.rs/druid/0.6.0/druid/struct.LocalizedString.html#method.resolve
 [localization]: ./localization.md
