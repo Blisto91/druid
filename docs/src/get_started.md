@@ -1,7 +1,7 @@
 
 [Broken link] 
 
-[Broken link]: www.notaworkingwebsite.com
+[Broken link]: https://www.notaworkingwebsite.com
 
 # Get started with Druid
 *this is outdated, and should be replaced with a walkthrough of getting a simple
