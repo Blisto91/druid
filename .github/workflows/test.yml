@@ -12,6 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }} 
     name: mdbook build
     strategy:
+      continue-on-error: true
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
@@ -38,4 +39,3 @@ jobs:
       - name: mdbook build
         run: mdbook build
         working-directory: ./docs
-
